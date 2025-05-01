@@ -3,6 +3,7 @@ package dev.anuradha.authenticationservice.controller;
 import dev.anuradha.authenticationservice.dto.LoginRequestDTO;
 import dev.anuradha.authenticationservice.dto.AuthResponseDTO;
 import dev.anuradha.authenticationservice.dto.RegisterRequestDTO;
+import dev.anuradha.authenticationservice.model.RoleName;
 import dev.anuradha.authenticationservice.service.AuthService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -28,18 +29,24 @@ public class AuthController {
 
     @PostMapping("/register")
     public AuthResponseDTO register(@Valid @RequestBody RegisterRequestDTO request) {
-        try{
-            String token = authService.registerUser(request.getUsername(), request.getEmail(), request.getPassword());
+        try {
+            // Default role is USER if none is provided
+            RoleName roleName = request.getRole() != null ? request.getRole() : RoleName.USER;
+
+            // Call the registerUser method to register the user and generate a token
+            String token = authService.registerUser(request.getUsername(), request.getEmail(), request.getPassword(), roleName);
+
+            // Return response with the token and success message
             return new AuthResponseDTO(token, "Registration successful");
-        }catch (ResponseStatusException ex){
-            throw ex;
-        }
-        catch (Exception ex){
+        } catch (ResponseStatusException ex) {
+            throw ex;  // Re-throw known exceptions
+        } catch (Exception ex) {
             // Log unexpected exceptions
             log.error("Unexpected error during registration", ex);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred");
         }
     }
+
 
     @PostMapping("/login")
     public AuthResponseDTO login(@Valid @RequestBody LoginRequestDTO request) {

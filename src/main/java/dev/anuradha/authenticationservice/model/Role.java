@@ -20,6 +20,6 @@ public class Role {
 
 
     @Column(unique = true, nullable = false)
-    private RoleName name; // e.g., "ROLE_USER", "ROLE_ADMIN"
+    private RoleName name; // e.g., "USER", "ADMIN"
 
 }

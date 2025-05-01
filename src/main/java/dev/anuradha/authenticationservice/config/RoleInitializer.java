@@ -17,11 +17,11 @@ public class RoleInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (roleRepository.findByName(RoleName.ROLE_USER).isEmpty()) {
-            roleRepository.save(new Role(null, RoleName.ROLE_USER));
+        if (roleRepository.findByName(RoleName.USER) == null) {
+            roleRepository.save(new Role(null, RoleName.USER));
         }
-        if (roleRepository.findByName(RoleName.ROLE_ADMIN).isEmpty()) {
-            roleRepository.save(new Role(null, RoleName.ROLE_ADMIN));
+        if (roleRepository.findByName(RoleName.ADMIN) == null) {
+            roleRepository.save(new Role(null, RoleName.ADMIN));
         }
     }
 }

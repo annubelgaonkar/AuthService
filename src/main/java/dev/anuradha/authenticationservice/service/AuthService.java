@@ -31,7 +31,7 @@ public class AuthService {
 
 
 
-    public String registerUser(String username, String email, String password) {
+    public String registerUser(String username, String email, String password, RoleName roleName) {
         if (userRepository.findByEmail(email) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists: " + email);
         }
@@ -40,8 +40,11 @@ public class AuthService {
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
 
-        Role role = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findByName(roleName);
+
+        if (role == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found: " + roleName);
+        }
 
         Set<Role> roles = new HashSet<>();
         roles.add(role);
