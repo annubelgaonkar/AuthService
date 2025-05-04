@@ -30,8 +30,9 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
 
 
-
-    public String registerUser(String username, String email, String password, RoleName roleName) {
+    public String registerUser(String username,
+                               String email,
+                               String password, RoleName roleName) {
         if (userRepository.findByEmail(email) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists: " + email);
         }
